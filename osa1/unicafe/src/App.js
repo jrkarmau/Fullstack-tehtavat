@@ -25,25 +25,33 @@ const Button = ({ handleClick, text }) => (
 const Statistics = ({ goodValue, neutralValue, badValue }) => {
 
   let all = goodValue + neutralValue + badValue
-  let average = ((goodValue*1 + neutralValue*0 + badValue*-1)/all).toFixed(2)
-  let positive = (goodValue/all*100).toFixed(2) + "%"
+  let average = ((goodValue * 1 + neutralValue * 0 + badValue * -1) / all).toFixed(2)
+  let positive = (goodValue / all * 100).toFixed(2) + "%"
   if (all === 0) return <div><b>No feedback given</b></div>
 
   return (
     <div>
-      <StatisticLine text="Good:" value={goodValue}/>
-      <StatisticLine text="Neutral:" value={neutralValue}/>
-      <StatisticLine text="Bad:" value={badValue}/>
-      <StatisticLine text="All:" value={all}/>
-      <StatisticLine text="Average:" value={average}/>
-      <StatisticLine text="Positive:" value={positive}/>
+      <table>
+        <tbody>
+        <StatisticLine text="Good:" value={goodValue} />
+        <StatisticLine text="Neutral:" value={neutralValue} />
+        <StatisticLine text="Bad:" value={badValue} />
+        <StatisticLine text="All:" value={all} />
+        <StatisticLine text="Average:" value={average} />
+        <StatisticLine text="Positive:" value={positive} />
+        </tbody>
+      </table>
     </div>
   )
+
 }
 
 
-const StatisticLine = ({text, value}) => (
-  <>{text} {value}<br></br></>
+const StatisticLine = ({ text, value }) => (
+  <tr>
+    <td>{text}</td>
+    <td>{value}</td>
+  </tr>
 )
 
 
