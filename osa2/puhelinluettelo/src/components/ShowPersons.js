@@ -1,22 +1,24 @@
 import React from "react"
 
-const ShowPersons = ({ persons, filter }) => {
-    
-    let filteredPersons = persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
+const ShowPersons = ({ persons, searchName, handlePersonDelete }) => {
 
-    return (
-      <ul>
-        {filteredPersons.map(person =>
-          <SinglePerson key={person.id} person={person} />
-        )}
-      </ul>
-    )
-  }
-  
-  const SinglePerson = ({ person }) => {
-    return (
-      <li>{person.name} {person.number} </li>
-    )
-  }
+  const filteredPersons = persons.filter(person => person.name.toLowerCase().includes(searchName.toLowerCase()))
+
+  return (
+    <ul>
+      {filteredPersons.map(person =>
+        <SinglePerson key={person.id} person={person} handlePersonDelete={handlePersonDelete} />
+      )}
+    </ul>
+  )
+}
+
+const SinglePerson = ({ person, handlePersonDelete }) => {
+  return (
+    <li>{person.name} {person.number}
+      <button onClick={() => handlePersonDelete(person)}>Delete</button>
+    </li>
+  )
+}
 
 export default ShowPersons
