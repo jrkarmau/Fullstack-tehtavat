@@ -21,6 +21,6 @@ const destroy = (id) => {
   return request.then(response => response.data)
 }
 
-export default {
-  getAll, create, update, destroy
-}
+const personServices = {getAll, create, update, destroy}
+
+export default personServices

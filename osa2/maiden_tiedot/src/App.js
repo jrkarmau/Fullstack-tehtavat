@@ -3,17 +3,19 @@ import axios from 'axios'
 
 const App = () => {
   const [countries, setCountries] = useState([])
+  const [allCountries, setAllCountries] = useState([])
   const [searchName, setSearchName] = useState('')
 
 
 
   useEffect(() => {
     axios
-      .get(`https://restcountries.eu/rest/v2/name/${searchName}`)
+      .get('https://restcountries.eu/rest/v2/all')
       .then(response => {
-        console.log("kekkuli");
-        setCountries(response.data)
+        console.log("kekkuli")
+        setAllCountries(response.data)
       })
+      .catch(erorro => console.log("error"))
   }, [])
 
   const handleSearch = (event) => {
@@ -38,29 +40,5 @@ const Search = ({ handleSearch, text }) => {
     </div>
   )
 }
-
-/*
-const ShowPersons = ({ persons, filter }) => {
-  
-let filteredPersons = persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
-return (
-  <ul>
-    {filteredPersons.map(person =>
-      <SinglePerson key={person.id} person={person} />
-    )}
-  </ul>
-)
-}
-
-
-
-const SinglePerson = ({ person }) => {
-return (
-  <li>{person.name} {person.number} </li>
-)
-}
-*/
-
-
 
 export default App

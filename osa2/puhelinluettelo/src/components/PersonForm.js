@@ -6,13 +6,15 @@ const PersonForm = ({ newName, newNumber, addPerson,
       <div>
         <form onSubmit={addPerson}>
           <div>
-            Name: <input
+            Name: 
+            <input
               value={newName}
               onChange={handlePersonChange}
             />
           </div>
           <div>
-            Number: <input
+            Number: 
+            <input
               value={newNumber}
               onChange={handleNumberChange}
             />

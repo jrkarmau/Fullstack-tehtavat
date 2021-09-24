@@ -3,12 +3,17 @@ import ShowPersons from './components/ShowPersons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import personService from './services/persons'
+import Notification from './components/Notification'
+import ErrorNotification from './components/ErrorNotification'
+import './index.css'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+  const [Message, setMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -26,16 +31,22 @@ const App = () => {
       id: newName
     }
     if (persons.some(person => person.name === newName)) {
-      if (window.confirm(`"${newName}" is already added to phonebook, replace the old number wit a new one?`)) {
-        let personToUpdate = persons.find(person => person.name === newName)
+      if (window.confirm(`"${newName}" is already added to phonebook, replace the old number with a new one?`)) {
+        const personToUpdate = persons.find(person => person.name === newName)
         personService
           .update(personToUpdate.id, personObject)
           .then(returnedPerson => {
             setPersons(persons.map(person => person.id !== returnedPerson.id ? person : returnedPerson))
+            info(`Person "${personObject.name}" updated`)
           })
-      }
+          .catch(fail => {
+            console.log(fail)
+            error(`"${personObject.name}" is already deleted from server`)
+          })
 
-    } else {
+      }
+    }
+    else {
       personService
         .create(personObject)
         .then(returnedPerson => {
@@ -43,6 +54,7 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         })
+      info(`Person "${personObject.name}" added`)
     }
   }
 
@@ -52,7 +64,22 @@ const App = () => {
         .destroy(person.id)
       const newPersons = persons.filter(p => p.id !== person.id)
       setPersons([...newPersons])
+      info(`Person "${person.name}" deleted`)
     }
+  }
+
+  const info = (text) => {
+    setMessage(text)
+    setTimeout(() => {
+      setMessage(null)
+    }, 3000)
+  }
+
+  const error = (text) => {
+    setErrorMessage(text)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
   }
 
   const handleFilter = (event) => {
@@ -70,6 +97,8 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={Message} />
+      <ErrorNotification message={errorMessage} />
       <Filter handleFilter={handleFilter} text={newFilter} />
       <h2>Add a new</h2>
       <PersonForm newName={newName} newNumber={newNumber}
