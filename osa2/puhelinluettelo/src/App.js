@@ -27,23 +27,26 @@ const App = () => {
     event.preventDefault()
     const personObject = {
       name: newName,
-      number: newNumber,
-      id: newName
+      number: newNumber
     }
+
     if (persons.some(person => person.name === newName)) {
       if (window.confirm(`"${newName}" is already added to phonebook, replace the old number with a new one?`)) {
         const personToUpdate = persons.find(person => person.name === newName)
-        personService
-          .update(personToUpdate.id, personObject)
-          .then(returnedPerson => {
-            setPersons(persons.map(person => person.id !== returnedPerson.id ? person : returnedPerson))
-            info(`Person "${personObject.name}" updated`)
-          })
-          .catch(fail => {
-            console.log(fail)
-            error(`"${personObject.name}" is already deleted from server`)
-          })
-
+        if (newNumber.length < 8) {
+          error('Number must be minimun of 8 character')
+        } else {
+          personService
+            .update(personToUpdate.id, personObject)
+            .then(returnedPerson => {
+              setPersons(persons.map(person => person.id !== returnedPerson.id ? person : returnedPerson))
+              info(`Person "${personObject.name}" updated`)
+            })
+            .catch(fail => {
+              console.log(fail)
+              error(`"${personObject.name}" is already deleted from server`)
+            })
+        }
       }
     }
     else {
@@ -53,8 +56,16 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
+          info(`Person "${personObject.name}" added`)
         })
-      info(`Person "${personObject.name}" added`)
+        .catch(err => {
+          if (newName.length < 3) {
+            error('Name must be minimun of 3 character')
+          } else {
+            error('Number must be minimun of 8 character')
+          }
+          console.log(err.response.data)
+        })
     }
   }
 
@@ -72,7 +83,7 @@ const App = () => {
     setMessage(text)
     setTimeout(() => {
       setMessage(null)
-    }, 3000)
+    }, 5000)
   }
 
   const error = (text) => {
