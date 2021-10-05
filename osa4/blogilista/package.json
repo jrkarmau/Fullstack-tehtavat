@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --verbose",
     "start": "node index.js",
     "dev": "nodemon index.js",
     "lint": "eslint ."
@@ -12,14 +12,16 @@
   "author": "Jovan Karmakka",
   "license": "ISC",
   "dependencies": {
-    "Router": "^2.1.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "mongoose": "^6.0.8"
+    "lodash": "^4.17.21",
+    "mongoose": "^6.0.8",
+    "Router": "^2.1.0"
   },
   "devDependencies": {
     "eslint": "^7.32.0",
+    "jest": "^27.2.4",
     "nodemon": "^2.0.13"
   }
 }
