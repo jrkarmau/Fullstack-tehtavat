@@ -1,8 +1,10 @@
 POST http://localhost:3003/api/blogs/
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Impya2FybWF1IiwiaWQiOiI2MTYxNDhkNzA5ZDM1NmNlN2NkNmFiMTQiLCJpYXQiOjE2MzM3NjYwMTIsImV4cCI6MTYzMzc2OTYxMn0.cw_OHabmb4DqSjom13HJs8cFAKd0F_wk9mcZBxD7o7I
 
 {
-  "author": "name",
-  "url": "google.com2",
-  "likes": 25
+  "title": "blogini3",
+  "author": "jovan",
+  "url": "www.google.com",
+  "likes": 101
 }

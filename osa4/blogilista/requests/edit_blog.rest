@@ -1,0 +1,10 @@
+PUT http://localhost:3003/api/blogs/61614918044fffae7a89bfbc
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Impya2FybWF1IiwiaWQiOiI2MTYxNDhkNzA5ZDM1NmNlN2NkNmFiMTQiLCJpYXQiOjE2MzM3NjU2MjYsImV4cCI6MTYzMzc2OTIyNn0.NNxBZ9a-1PjS9Bkjs8kFOKM9-45FcAwZNCKcjapMenE
+
+{
+  "title": "bloginimuokattu",
+  "author": "ediotoituAuthor",
+  "url": "www.google.com",
+  "likes": 101
+}
