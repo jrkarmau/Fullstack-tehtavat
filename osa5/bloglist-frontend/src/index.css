@@ -2,13 +2,6 @@
   html {
     background-color:papayawhip;
   }
-
-  .emptyNotification {
-    font-size: 20px;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
   
   .notification {
     color: green;

@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import ErrorNotification from './components/ErrorNotification'
 import './index.css'
+import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
+import ShowBlogs from './components/ShowBlogs'
+import PropTypes from 'prop-types'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+  const [User, setUser] = useState(null)
   const [notification, setNotification] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
+  const [blogFormVisible, setBlogFormVisible] = useState(false)
 
 
   useEffect(() => {
@@ -26,29 +25,23 @@ const App = () => {
 
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
+    const UserJSON = window.localStorage.getItem('loggedBlogappUser')
+    if (UserJSON) {
+      const User = JSON.parse(UserJSON)
+      setUser(User)
+      blogService.setToken(User.token)
     }
   }, [])
 
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-
+  const handleLogin = async (user) => {
     try {
-      const user = await loginService.login({
-        username, password,
-      })
+      const loggedUser = await loginService.login(user)
       window.localStorage.setItem(
-        'loggedBlogappUser', JSON.stringify(user)
+        'loggedBlogappUser', JSON.stringify(loggedUser)
       )
-      blogService.setToken(user.token)
-      setUser(user)
-      setUsername('')
-      setPassword('')
+      blogService.setToken(loggedUser.token)
+      setUser(loggedUser)
     } catch (exception) {
       setErrorMessage('wrong credentials')
       setTimeout(() => {
@@ -58,56 +51,43 @@ const App = () => {
   }
 
 
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>
-  )
-
-
   const logOut = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
   }
 
-
-  const addBlog = async (event) => {
-    event.preventDefault()
-    const blog = {
-      title: newTitle,
-      author: newAuthor,
-      url: newAuthor
+  const updateBlog = (blog) => {
+    try {
+      blogService.update(blog.id, blog)
+    } catch (error) {
+      setErrorMessage(error.message)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
     }
+  }
 
+  const deleteBlog = (id) => {
+    try {
+      blogService.remove(id)
+      setBlogs(blogs.filter((blog) => blog.id !== id ))
+    } catch (error) {
+      setErrorMessage(error.message)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
+  const addBlog = async (blog) => {
     try {
       const addedBlog = await blogService.create(blog)
-      setNewTitle('')
-      setNewAuthor('')
-      setNewUrl('')
+      setBlogFormVisible(false)
       setBlogs(blogs.concat(addedBlog))
       setNotification(`added ${blog.title} written by ${blog.author}`)
       setTimeout(() => {
         setNotification(null)
       }, 5000)
-      console.log('lisätty');
     } catch (error) {
       setErrorMessage('blog must have author OR url included')
       setTimeout(() => {
@@ -117,61 +97,52 @@ const App = () => {
   }
 
 
-  const BlogForm = () => (
-    <form onSubmit={addBlog}>
-      <table>
-        <tbody>
-          <tr>
-            <th>Title</th>
-            <th><input
-              value={newTitle}
-              onChange={({ target }) => setNewTitle(target.value)}
-            /></th>
-          </tr>
-          <tr>
-            <th>Author</th>
-            <th><input
-              value={newAuthor}
-              onChange={({ target }) => setNewAuthor(target.value)}
-            /></th>
-          </tr>
-          <tr>
-            <th>Url</th>
-            <th><input
-              value={newUrl}
-              onChange={({ target }) => setNewUrl(target.value)}
-            /></th>
-          </tr>
-        </tbody>
-      </table>
-      <button type="submit">save</button>
-    </form >
-  )
+  const blogForm = () => {
+    const hideWhenVisible = { display: blogFormVisible ? 'none' : '' }
+    const showWhenVisible = { display: blogFormVisible ? '' : 'none' }
+
+    return (
+      <div>
+        <div style={hideWhenVisible}>
+          <button onClick={() => setBlogFormVisible(true)}>create new blog</button>
+        </div>
+        <div style={showWhenVisible}>
+          <BlogForm addBlog={addBlog} />
+          <button onClick={() => setBlogFormVisible(false)}>cancel</button>
+        </div >
+      </div >
+    )
+  }
+
+  ShowBlogs.propTypes = {
+    user:PropTypes.object.isRequired,
+    logOut: PropTypes.func.isRequired,
+    blogs:PropTypes.array.isRequired,
+    blogForm: PropTypes.func.isRequired,
+    updateBlog: PropTypes.func.isRequired,
+    deleteBlog:PropTypes.func.isRequired,
+
+
+  }
 
 
   const showBlogs = () => (
-    <div>
-      <p>
-        {user.name} logged in
-        <button onClick={() => logOut()}> logout </button>
-      </p>
-      <h2>Happy reading!</h2>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
-      <h2>Add a new</h2>
-      {BlogForm()}
-    </div>
+    <ShowBlogs
+      user={User}
+      logOut={logOut}
+      blogs={blogs}
+      blogForm={blogForm}
+      updateBlog={updateBlog}
+      deleteBlog={deleteBlog}
+    />
   )
-
 
   return (
     <div>
-      <h1>Blogs</h1>
       <Notification message={notification} />
       <ErrorNotification message={errorMessage} />
-      {user === null ?
-        loginForm() :
+      {User === null ?
+        <LoginForm handleLogin={handleLogin} /> :
         showBlogs()
       }
     </div>
