@@ -13,6 +13,12 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
   const body = request.body
   const user = request.user
 
+  if (!body.title && !body.url) {
+    return response.status(400).json({
+      error: 'invalid blog fields'
+    })
+  }
+
   const blog = new Blog({
     title: body.title,
     author: body.author,
@@ -26,6 +32,7 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
   await user.save()
 
   response.json(savedBlog.toJSON())
+
 })
 
 

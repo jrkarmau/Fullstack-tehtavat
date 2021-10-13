@@ -55,7 +55,7 @@ const Blog = ({ blog, updateBlog, user, deleteBlog }) => {
         {blog.title} {blog.author} <button style={buttonStyle} onClick={() => setVisible(false)}>hide</button>
         <br />
         <a href={blog.url}>{blog.url}</a><br />
-        <a>likes: {likes}</a><button style={buttonStyle} onClick={() => handleLike()}>like</button><br />
+        likes: {likes}<button style={buttonStyle} onClick={() => handleLike()}>like</button><br />
         {blog.user.name}<br />
         {user.username === blog.user.username ?
           <button style={deleteButtonStyle} onClick={handleDelete}>delete</button> :

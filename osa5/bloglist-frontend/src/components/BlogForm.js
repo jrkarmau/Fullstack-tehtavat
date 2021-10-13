@@ -26,28 +26,28 @@ const BlogForm = ({ addBlog }) => {
           <tbody>
             <tr>
               <th>Title</th>
-              <th><input className='titleInput'
+              <th><input id='titleInput'
                 value={newTitle}
                 onChange={(event) => { setNewTitle(event.target.value) }}
               /></th>
             </tr>
             <tr>
               <th>Author</th>
-              <th><input className='authorInput'
+              <th><input id='authorInput'
                 value={newAuthor}
                 onChange={(event) => { setNewAuthor(event.target.value) }}
               /></th>
             </tr>
             <tr>
               <th>Url</th>
-              <th><input className='urlInput'
+              <th><input id='urlInput'
                 value={newUrl}
                 onChange={(event) => { setNewUrl(event.target.value) }}
               /></th>
             </tr>
           </tbody>
         </table>
-        <button type="submit">create</button>
+        <button id='create' type="submit">create</button>
       </form >
     </div>
   )
