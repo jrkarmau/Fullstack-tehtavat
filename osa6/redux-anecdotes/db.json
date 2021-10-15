@@ -1,0 +1,24 @@
+{
+  "anecdotes": [
+    {
+      "content": "If it hurts, do it more often",
+      "votes": 3,
+      "id": 1
+    },
+    {
+      "content": "Adding manpower to a late software project makes it later!",
+      "votes": 1,
+      "id": 2
+    },
+    {
+      "content": "Premature optimization is the root of all evil.",
+      "votes": 5,
+      "id": 3
+    },
+    {
+      "content": "kissa",
+      "votes": 0,
+      "id": 4
+    }
+  ]
+}
